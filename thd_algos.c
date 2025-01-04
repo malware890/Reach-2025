@@ -5,32 +5,26 @@
 #include <stdio.h>
 #include <pthread.h>
 
-int fcfs() {
+int fcfs(void) {
 
-    return FCFS_FAILURE;
 }
 
-int sjf() {
+int sjf(void) {
 
-    return SJF_FAILURE;
 }
 
-int ljf() {
+int ljf(void) {
 
-    return LJF_FAILURE;
 }
 
-int pri_sched() {
+int pri_sched(void) {
 
-    return PRI_SCHED_FAILURE;
 }
 
-int rd_rob() {
+int rd_rob(void) {
 
-    return RD_ROB_FAILURE;
 }
 
-int mlq() {
+int mlq(void) {
 
-    return MLQ_FAILURE;
 }

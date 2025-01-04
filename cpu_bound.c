@@ -1,24 +1,27 @@
-#include "thd_algos.h"
+#include "cpu_bound.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <math.h>
 #include <pthread.h>
 #include <sys/wait.h>
 
+
+// File Operations
 int process_yob(FILE* f) {
     
 }
 
-void mat_add(int len, int wid, int mat1[len][wid], int mat2[len][wid], int res[len][wid]) {
-    for (int i = 0; i < len; i++) {
-        for (int j = 0; j < wid; j++)
-            res[i][j] = mat1[i][j] + mat2[i][j];
-    }
+
+// Matrix Operations       Basic Tests: OK       Intermediate Tests: ___       Simulation: ___
+void mat_add(int len, int wid, int* mat1, int* mat2, int* res) {
+    for (int i = 0; i < len * wid; i++)
+        res[i] = mat1[i] + mat2[i];
 }
 
-void mat_sub(int len, int wid, int mat1[len][wid], int mat2[len][wid], int res[len][wid]) {
-    for (int i = 0; i < len; i++) {
-        for (int j = 0; j < wid; j++)
-            res[i][j] = mat1[i][j] - mat2[i][j];
-    }
+void mat_sub(int len, int wid, int* mat1, int* mat2, int* res) {
+    for (int i = 0; i < len * wid; i++)
+        res[i] = mat1[i] - mat2[i];
 }
 
 void mat_mul(int len, int wid1, int wid2, int mat1[len][wid1], int mat2[wid1][wid2], int res[len][wid2]) {
@@ -34,24 +37,42 @@ void mat_mul(int len, int wid1, int wid2, int mat1[len][wid1], int mat2[wid1][wi
     }
 }
 
-int main() {
-    int m1[2][2] = {
-        {2, 1},
-        {1, 4},
-    };
 
-    int m2[2][3] = {
-        {1, 2, 0},
-        {0, 1, 2}
-    };
+// Prime Generation       Basic Tests: OK       Intermediate Tests: ___       Simulation: ___
+static int is_prime(int n) {
+    if (n == 1)
+        return 0;
+    for (int i = 2; i <= sqrt(n); i++)
+        if (n % i == 0) return 0;
+    return 1;
+}
 
-    int m3[2][3];
+int primes(int** ret, int start, int end) {
+    int* buff = malloc(50 * sizeof(int));
+    if (buff == NULL)
+        perror("__primes: Initial allocation failed");
 
-    mat_mul(2, 2, 3, m1, m2, m3);
-    for (int i = 0; i < 2; i++) {
-        for (int j = 0; j < 3; j++)
-            printf("%d ", m3[i][j]);
-        printf("\n");
+    int size = 50;
+    int occ = 0;
+
+    for (int i = start; i <= end; i++) {
+        if (is_prime(i)) {
+            if (occ == size) {
+                buff = realloc(buff, sizeof(int) * (size + 20));
+                if (buff == NULL)
+                    perror("__primes: Realloc failed");
+                size += 20;
+            }
+            buff[occ] = i;
+            occ++;
+        }
     }
 
+    *ret = buff;
+    return occ;
+}
+
+
+int main() {
+    
 }
