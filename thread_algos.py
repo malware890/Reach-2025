@@ -1,11 +1,14 @@
+import time
+
+
 class NoteThread:
     def __init__(self, thread, note):
         self.thread = thread
         self.note = note
 
 
-def fcfs(*threads: NoteThread):
-    for thread in threads:
+def fcfs(thread_queue):
+    for thread in thread_queue:
         thread.thread.start()
         thread.thread.join()
 
@@ -47,4 +50,8 @@ def priority_schedule(*threads: NoteThread):
 
 
 def round_robin(*threads, quantum):
-    pass
+    current_time = time.time()
+    while threads:
+        if time.time() == current_time + quantum:
+            pass
+
