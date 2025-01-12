@@ -8,7 +8,6 @@ def insertion_sort(arr: list):
             arr[j], arr[j - 1] = arr[j - 1], arr[j]
             j -= 1
 
-
 def selection_sort(arr: list):
     for i in range(len(arr) - 1):
         maxi = i
@@ -16,7 +15,6 @@ def selection_sort(arr: list):
             if arr[j] > arr[maxi]:
                 maxi = j
         arr[i], arr[maxi] = arr[maxi], arr[i]
-
 
 def merge_sort(arr: list):
     if len(arr) > 1:
@@ -49,7 +47,6 @@ def merge_sort(arr: list):
             j += 1
             k += 1
 
-
 def quick_sort(arr: list):
     def partition(a, low, high):
         pivot = a[high]
@@ -70,7 +67,6 @@ def quick_sort(arr: list):
             sort(a, partition_index + 1, high)
 
     sort(arr, 0, len(arr) - 1)
-
 
 def heap_sort(arr: list):
     def heapify(a, n, i):
@@ -167,7 +163,6 @@ class AlphaToNumeric:
     def __repr__(self):
         return self.alpha
 
-
 def yob_process(write_yob, read_yob, sort):
     r = reader(read_yob)
     lines = []
@@ -180,3 +175,5 @@ def yob_process(write_yob, read_yob, sort):
     for line in lines:
         w.writerow([line.alpha.capitalize(), line.sex, str(line.count)])
 
+
+yob_process(open("t.txt", 'w'), open("yobs\\yob2023.txt", 'r'), selection_sort)

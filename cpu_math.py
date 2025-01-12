@@ -8,7 +8,6 @@ def prime_check(start: int, end: int):
         if p:
             yield i
 
-
 def mat_mult(mat1: list[list], mat2: list[list]):
     if len(mat1[0]) != len(mat2) or not mat1 or not mat2:
         raise ValueError("Invalid Arguments")
@@ -32,7 +31,6 @@ class State:
 
     def __repr__(self):
         return f"({self.state[0]}, {self.state[1]})"
-
 
 class Maze:
     def __init__(self, path):
@@ -125,4 +123,93 @@ class Maze:
                     frontier.append(State(state, pos))
 
 
+class Symbol:
+    def __init__(self, name):
+        self.name = name
 
+    def evaluate(self, model):
+        return bool(model[self.name])
+
+    def symbols(self):
+        return {self.name}
+
+class Not:
+    def __init__(self, operand):
+        self.operand = operand
+
+    def evaluate(self, model):
+        return not self.operand.evaluate(model)
+
+    def symbols(self):
+        return self.operand.symbols()
+
+class And:
+    def __init__(self, *conjuncts):
+        self.conjuncts = list(conjuncts)
+
+    def evaluate(self, model):
+        return all(conjunct.evaluate(model) for conjunct in self.conjuncts)
+
+    def symbols(self):
+        return set.union(*[conjunct.symbols() for conjunct in self.conjuncts])
+
+class Or:
+    def __init__(self, *disjuncts):
+        self.disjuncts = list(disjuncts)
+
+    def evaluate(self, model):
+        return any(disjunct.evaluate(model) for disjunct in self.disjuncts)
+
+    def symbols(self):
+        return set.union(*[disjunct.symbols() for disjunct in self.disjuncts])
+
+class Implication:
+    def __init__(self, antecedent, consequent):
+        self.antecedent = antecedent
+        self.consequent = consequent
+
+    def evaluate(self, model):
+        return ((not self.antecedent.evaluate(model))
+                or self.consequent.evaluate(model))
+
+    def symbols(self):
+        return set.union(self.antecedent.symbols(), self.consequent.symbols())
+
+
+class Biconditional:
+    def __init__(self, left, right):
+        self.left = left
+        self.right = right
+
+    def evaluate(self, model):
+        return ((self.left.evaluate(model)
+                 and self.right.evaluate(model))
+                or (not self.left.evaluate(model)
+                    and not self.right.evaluate(model)))
+
+    def symbols(self):
+        return set.union(self.left.symbols(), self.right.symbols())
+
+
+def model_check(knowledge, query):
+    def check_all(knowledge, query, symbols, model):
+        if not symbols:
+            if knowledge.evaluate(model):
+                return query.evaluate(model)
+            return True
+        else:
+            remaining = symbols.copy()
+            p = remaining.pop()
+
+            model_true = model.copy()
+            model_true[p] = True
+
+            model_false = model.copy()
+            model_false[p] = False
+
+            return (check_all(knowledge, query, remaining, model_true) and
+                    check_all(knowledge, query, remaining, model_false))
+
+    symbols = set.union(knowledge.symbols(), query.symbols())
+
+    return check_all(knowledge, query, symbols, dict())

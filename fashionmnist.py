@@ -8,7 +8,7 @@ from datetime import datetime
 def neural_network():
     startTime = datetime.now()
     
-    train_data = pd.read_csv('sign_mnist_13bal_train.csv')
+    train_data = pd.read_csv('DataSets/sign_mnist_13bal_train.csv')
     
     X_train = train_data.drop('class', axis=1)
     X_train = X_train / 255.0
@@ -16,13 +16,11 @@ def neural_network():
     
     X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2, random_state=2, stratify=y_train)
     
-    test_data = pd.read_csv('sign_mnist_13bal_test.csv')
+    test_data = pd.read_csv('DataSets/sign_mnist_13bal_test.csv')
     
     X_test = test_data.drop('class', axis=1)
     X_test = X_test / 255.0
     y_test = test_data['class']
-    
-    #X_train, X_test, y_train, y_test = train_test_split(X_train, y_train, test_size=40, random_state=0)
     
     neural_net_model = MLPClassifier(hidden_layer_sizes=(128, 64, 32), activation='relu', random_state=42, tol=0.005)
     
