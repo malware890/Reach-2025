@@ -175,7 +175,6 @@ class Implication:
     def symbols(self):
         return set.union(self.antecedent.symbols(), self.consequent.symbols())
 
-
 class Biconditional:
     def __init__(self, left, right):
         self.left = left

@@ -1,8 +1,9 @@
+import threading
 import time
 
 
 class NoteThread:
-    def __init__(self, thread, note):
+    def __init__(self, thread: threading.Thread, note: int):
         self.thread = thread
         self.note = note
 
@@ -13,7 +14,7 @@ def fcfs(thread_queue):
         thread.thread.join()
 
 
-def sjf(*threads: NoteThread):
+def sjf(threads: list[NoteThread]):
     threads = list(threads)
     while threads:
         shortest = 0
@@ -25,7 +26,7 @@ def sjf(*threads: NoteThread):
         thread.thread.join()
 
 
-def ljf(*threads: NoteThread):
+def ljf(threads: list[NoteThread]):
     threads = list(threads)
     while threads:
         longest = 0
@@ -37,7 +38,7 @@ def ljf(*threads: NoteThread):
         thread.thread.join()
 
 
-def priority_schedule(*threads: NoteThread):
+def priority_schedule(threads: list[NoteThread]):
     threads = list(threads)
     while threads:
         importantest = -1
@@ -48,10 +49,8 @@ def priority_schedule(*threads: NoteThread):
         thread.thread.start()
         thread.thread.join()
 
-
-def round_robin(*threads, quantum):
-    current_time = time.time()
-    while threads:
-        if time.time() == current_time + quantum:
-            pass
-
+# def round_robin(threads: list[NoteThread], quantum):
+#     while any(t.thread.is_alive() for t in threads):
+#         for i in range(len(threads)):
+#             if threads[i].thread.is_alive():
+#                 time.sleep(quantum)

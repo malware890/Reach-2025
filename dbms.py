@@ -2,7 +2,7 @@ import json
 import os
 
 
-class SimpleJSONDatabase:
+class DBMS:
     def __init__(self, file_path):
         self.file_path = file_path
         if not os.path.exists(file_path):
@@ -22,8 +22,6 @@ class SimpleJSONDatabase:
         return list(filter(filter_fn, data)) if filter_fn else data
 
     def insert(self, record):
-        if not isinstance(record, dict):
-            raise ValueError("Record must be a dictionary.")
         data = self._load_data()
         data.append(record)
         self._save_data(data)
@@ -39,20 +37,3 @@ class SimpleJSONDatabase:
         data = self._load_data()
         data = [record for record in data if not filter_fn(record)]
         self._save_data(data)
-
-
-# db = SimpleJSONDatabase('database.json')
-
-# db.insert({"id": 1, "name": "Alice", "age": 25})
-# db.insert({"id": 2, "name": "Bob", "age": 30})
-
-# print("All Records:", db.select())
-
-# def update_age(record):
-#     record["age"] = 26
-
-# db.update(lambda r: r["id"] == 1, update_age)
-# print("After Update:", db.select())
-
-# db.delete(lambda r: r["id"] == 2)
-# print("After Deletion:", db.select())

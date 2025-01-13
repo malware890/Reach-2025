@@ -8,5 +8,3 @@ def run_ftp():
     factory = FTPFactory(portal)
     reactor.listenTCP(21, factory)
     reactor.run()
-
-run_ftp()

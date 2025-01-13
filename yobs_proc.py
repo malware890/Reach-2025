@@ -163,17 +163,18 @@ class AlphaToNumeric:
     def __repr__(self):
         return self.alpha
 
-def yob_process(write_yob, read_yob, sort):
-    r = reader(read_yob)
+def yob_process(read_yob, sort, write_yob):
+    rf = open(read_yob, 'r')
+    wf = open(write_yob, 'w')
+    r = reader(rf)
     lines = []
     for row in r:
         lines.append(AlphaToNumeric(row[0].lower(), row[1], row[2]))
 
     sort(lines)
 
-    w = writer(write_yob, lineterminator='\n')
+    w = writer(wf, lineterminator='\n')
     for line in lines:
         w.writerow([line.alpha.capitalize(), line.sex, str(line.count)])
-
-
-yob_process(open("t.txt", 'w'), open("yobs\\yob2023.txt", 'r'), selection_sort)
+    rf.close()
+    wf.close()

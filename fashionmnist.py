@@ -29,8 +29,8 @@ def neural_network():
     layer_sizes = [neural_net_model.coefs_[0].shape[0]]
     layer_sizes += [coef.shape[1] for coef in neural_net_model.coefs_]
     layer_size_str = " x ".join(map(str, layer_sizes))
-    print(f"Training set size: {len(y_train)}")
-    print(f"Layer sizes: {layer_size_str}")
+    # print(f"Training set size: {len(y_train)}")
+    # print(f"Layer sizes: {layer_size_str}")
     
     y_pred_train = neural_net_model.predict(X_train)
     y_pred = neural_net_model.predict(X_test)
@@ -65,13 +65,10 @@ def neural_network():
     
     for class_id in sorted(total_counts.keys()):
         accuracy = correct_counts[class_id] / total_counts[class_id] *100
-        print(f"Accuracy for class {class_id}: {accuracy:3.0f}%")
-    print(f"----------")
+    #     print(f"Accuracy for class {class_id}: {accuracy:3.0f}%")
+    # print(f"----------")
     overall_accuracy = overall_correct / len(y_test)*100
     overall_accuracy2 = overall_correct2 / len(y_val)*100
-    print(f"Overall Test Accuracy: {overall_accuracy:3.1f}%")
-    print(f"Overall Validation Accuracy: {overall_accuracy2:3.1f}%")
     overall_training_accuracy = correct_counts_training / total_counts_training*100
-    print(f"Overall Training Accuracy: {overall_training_accuracy:3.1f}%")
-    
-    print(datetime.now() - startTime)
+
+    return overall_accuracy, overall_accuracy2, overall_training_accuracy
