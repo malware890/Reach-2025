@@ -48,9 +48,3 @@ def priority_schedule(threads: list[NoteThread]):
         thread = threads.pop(importantest)
         thread.thread.start()
         thread.thread.join()
-
-# def round_robin(threads: list[NoteThread], quantum):
-#     while any(t.thread.is_alive() for t in threads):
-#         for i in range(len(threads)):
-#             if threads[i].thread.is_alive():
-#                 time.sleep(quantum)

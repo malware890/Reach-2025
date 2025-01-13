@@ -1,4 +1,5 @@
 import threading
+from sys import argv
 from thread_algos import *
 from dbms import *
 from yobs_proc import *
@@ -7,12 +8,15 @@ from fashionmnist import *
 # from ftp import *
 # from http import *
 
-maze = Maze("maze.txt")
+maze = Maze("mazes/maze.txt")
+maze2 = Maze("mazes/maze2.txt")
 db = DBMS("runner.json")
 
 def mat_wrapper():
-    for i in range(9):
-        mat_mult([
+    for _ in range(5):
+        mat_mult(
+            [
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
@@ -23,7 +27,8 @@ def mat_wrapper():
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    ], [
+    ],  [
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
@@ -45,8 +50,10 @@ def mat_wrapper():
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     ],[
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
@@ -60,22 +67,26 @@ def mat_wrapper():
     ]))
 
 def prime_wrapper():
-    for i in range(9):
+    for _ in range(5):
         prime_check(1, 1000000)
-    print(prime_check(1, 1000000))
+    try:
+        print(next(prime_check(1, 1000000)))
+    except StopIteration:
+        return
 
 def dfs_wrapper():
-    for i in range(9):
+    for _ in range(9):
         maze.dfs()
-    print(maze.dfs())
+    for _ in range(5):
+        maze2.dfs()
 
 def bfs_wrapper():
-    for i in range(9):
+    for _ in range(9):
         maze.bfs()
     print(maze.bfs())
 
 def nn_wrapper():
-    for i in range(5):
+    for _ in range(5):
         neural_network()
     overall_accuracy, overall_accuracy2, overall_training_accuracy = neural_network()
     print(f"Overall Test Accuracy: {overall_accuracy:3.1f}%")
@@ -126,12 +137,12 @@ def mc_wrapper():
 
     query = Implication(PG, Or(A1, A2, A3))
 
-    for i in range(14):
+    for _ in range(14):
         model_check(knowledge, query)
     print(model_check(knowledge, query))
 
 def db_wrapper():
-    for i in range(20):
+    for _ in range(20):
         db.insert({"id": 1, "name": "Alice", "age": 25})
         db.insert({"id": 2, "name": "Bob", "age": 30})
         db.insert({"id": 3, "name": "Charlie", "age": 35})
@@ -192,20 +203,68 @@ mc_thread = threading.Thread(target=mc_wrapper)
 # ftp_thread = threading.Thread(target=run_ftp)
 # http_thread = threading.Thread(target=run_http)
 
-sorts = [selection_sort, insertion_sort, merge_sort, quick_sort, heap_sort]
+sorts = [merge_sort, quick_sort, heap_sort]
 yob_threads = []
 
 for i in range(1880, 1960, 20):
-    for j in range(5):
+    for j in range(3):
         yob_threads.append(threading.Thread(target=yob_process, args=(f"yobs/yob{i}.txt", sorts[j], f"yob_outputs/wyob{i}.txt")))
 
-threads = [NoteThread(thread, 0) for thread in yob_threads]
-# threads += [NoteThread(mat_thread, 0),
-#             NoteThread(prime_thread, 0),
-#             NoteThread(dfs_thread, 0),
-#             NoteThread(bfs_thread, 0),
-#             NoteThread(nn_thread, 0),
-#             NoteThread(mc_thread, 0)]
 
 if __name__ == "__main__":
-    fcfs(threads)
+    try:
+        match argv[1]:
+            case "fcfs":
+                threads = [NoteThread(thread, 0) for thread in yob_threads]
+                threads += [
+                    NoteThread(mat_thread, 0),
+                    NoteThread(prime_thread, 0),
+                    NoteThread(dfs_thread, 0),
+                    NoteThread(bfs_thread, 0),
+                    NoteThread(nn_thread, 0),
+                    ]
+                fcfs(threads)
+            case "sjf":
+                threads = [NoteThread(yob_threads[i], i + 3) for i in range(len(yob_threads))]
+                threads += [
+                    NoteThread(mat_thread, 8),
+                    NoteThread(prime_thread, 9),
+                    NoteThread(dfs_thread, 1),
+                    NoteThread(bfs_thread, 2),
+                    NoteThread(nn_thread, 0),
+                    ]
+                sjf(threads)
+            case "ljf":
+                threads = [NoteThread(yob_threads[i], i + 3) for i in range(len(yob_threads))]
+                threads += [
+                    NoteThread(mat_thread, 8),
+                    NoteThread(prime_thread, 9),
+                    NoteThread(dfs_thread, 1),
+                    NoteThread(bfs_thread, 2),
+                    NoteThread(nn_thread, 0),
+                    ]
+                ljf(threads)
+            case "priority_schedule":
+                threads = [NoteThread(yob_threads[i], 6 - i) for i in range(len(yob_threads))]
+                threads += [
+                    NoteThread(mat_thread, 1),
+                    NoteThread(prime_thread, 7),
+                    NoteThread(dfs_thread, 8),
+                    NoteThread(bfs_thread, 8),
+                    NoteThread(nn_thread, 9),
+                    ]
+                priority_schedule(threads)
+            case "rr":
+                queue: list[threading.Thread] = [thread for thread in yob_threads]
+                while queue:
+                    current_thread = queue.pop(0)
+                    if not current_thread.is_alive():
+                        current_thread.start()
+                    else:
+                        current_thread.join(timeout=0.25)
+                    if current_thread.is_alive():
+                        queue.append(current_thread)
+            case _:
+                print("Invalid Argument: Enter a Scheduling Algorithm")
+    except IndexError:
+        print("Invalid Argument: Enter a Scheduling Algorithm")

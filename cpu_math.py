@@ -35,23 +35,25 @@ class State:
 class Maze:
     def __init__(self, path):
         with open(path) as f:
+            self.sol_path: str = "mazes/sol1.txt" if path[-5] == 'e' else "mazes/sol2.txt"
             self.spaces = set()
             self.walls = set()
             self.start = None
             self.end = None
-            lines = f.readlines()
-            for i in range(len(lines)):
-                for j in range(len(lines[i])):
-                    if lines[i][j] == " ":
+            self.lines = f.readlines()
+            
+            for i in range(len(self.lines)):
+                for j in range(len(self.lines[i])):
+                    if self.lines[i][j] == " ":
                         self.spaces.add((i, j))
-                    elif lines[i][j] == "#":
+                    elif self.lines[i][j] == "#":
                         self.walls.add((i, j))
-                    elif lines[i][j] == "B":
+                    elif self.lines[i][j] == "B":
                         self.end = (i, j)
-                    elif lines[i][j] == "A":
+                    elif self.lines[i][j] == "A":
                         self.start = (i, j)
-            self.height = len(lines)
-            self.width = len(lines[0]) - 1
+            self.height = len(self.lines)
+            self.width = len(self.lines[0]) - 1
 
     def actions(self, pos):
         acts = ["Up", "Down", "Left", "Right"]
@@ -88,18 +90,30 @@ class Maze:
         while frontier:
             pos = frontier.pop()
             seen.add(pos.state)
+
             if self.goal_check(pos.state):
                 node = pos
-                sol.append(node)
-                while node.parent:
-                    sol.append(node.parent)
+                while node:
+                    sol.append(node.state)
                     node = node.parent
-                sol.reverse()
-                return sol
+
+                for p in sol:
+                    i, j = p
+                    if (i, j) != self.start and (i, j) != self.end:
+                        self.lines[i] = self.lines[i][:j] + "o" + self.lines[i][j+1:]
+                
+                with open(self.sol_path, 'w') as f:
+                    for line in self.lines:
+                        f.write(line)
+                return
+
             for a in self.actions(pos.state):
                 state = self.trans_model(pos.state, a)
-                if state not in frontier and state not in seen:
+                if state not in seen and state not in (s.state for s in frontier):
                     frontier.append(State(state, pos))
+
+        print("No solution found")
+
 
     def bfs(self):
         frontier = [State(self.start, None)]
@@ -109,18 +123,29 @@ class Maze:
         while frontier:
             pos = frontier.pop(0)
             seen.add(pos.state)
+
             if self.goal_check(pos.state):
                 node = pos
-                sol.append(node)
-                while node.parent:
-                    sol.append(node.parent)
+                while node:
+                    sol.append(node.state)
                     node = node.parent
-                sol.reverse()
-                return sol
+
+                for p in sol:
+                    i, j = p
+                    if (i, j) != self.start and (i, j) != self.end:
+                        self.lines[i] = self.lines[i][:j] + "o" + self.lines[i][j+1:]
+                
+                with open(self.sol_path, 'w') as f:
+                    for line in self.lines:
+                        f.write(line)
+                return
+
             for a in self.actions(pos.state):
                 state = self.trans_model(pos.state, a)
-                if state not in frontier and state not in seen:
+                if state not in seen and state not in (s.state for s in frontier):
                     frontier.append(State(state, pos))
+
+        print("No solution found")
 
 
 class Symbol:
