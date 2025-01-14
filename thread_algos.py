@@ -10,8 +10,10 @@ class NoteThread:
 
 def fcfs(thread_queue):
     for thread in thread_queue:
+        print(f"Starting thread {thread.thread.name}")
         thread.thread.start()
         thread.thread.join()
+        print(f"Thread {thread.thread.name} Completed")
 
 
 def sjf(threads: list[NoteThread]):
@@ -22,8 +24,10 @@ def sjf(threads: list[NoteThread]):
             if threads[i].note < shortest:
                 shortest = i
         thread = threads.pop(shortest)
+        print(f"Starting thread {thread.thread.name}")
         thread.thread.start()
         thread.thread.join()
+        print(f"Thread {thread.thread.name} Completed")
 
 
 def ljf(threads: list[NoteThread]):
@@ -34,8 +38,10 @@ def ljf(threads: list[NoteThread]):
             if threads[i].note > longest:
                 longest = i
         thread = threads.pop(longest)
+        print(f"Starting thread {thread.thread.name}")
         thread.thread.start()
         thread.thread.join()
+        print(f"Thread {thread.thread.name} Completed")
 
 
 def priority_schedule(threads: list[NoteThread]):
@@ -46,5 +52,22 @@ def priority_schedule(threads: list[NoteThread]):
             if threads[i].note > importantest:
                 importantest = i
         thread = threads.pop(importantest)
+        print(f"Starting thread {thread.thread.name}")
         thread.thread.start()
         thread.thread.join()
+        print(f"Thread {thread.thread.name} Completed")
+
+def rr(threads: list[NoteThread], quantum: int):
+    for note_thread in threads:
+        note_thread.thread.start()
+
+    while any(note_thread.thread.is_alive() for note_thread in threads):
+        for note_thread in threads:
+            if note_thread.thread.is_alive():
+                print(f"Running thread: {note_thread.thread.name}")
+                time.sleep(quantum)
+                if not note_thread.thread.is_alive():
+                    print(f"Thread {note_thread.thread.name} Completed")
+
+def mlq(threads: list[NoteThread]):
+    pass

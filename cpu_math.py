@@ -97,15 +97,7 @@ class Maze:
                     sol.append(node.state)
                     node = node.parent
 
-                for p in sol:
-                    i, j = p
-                    if (i, j) != self.start and (i, j) != self.end:
-                        self.lines[i] = self.lines[i][:j] + "o" + self.lines[i][j+1:]
-                
-                with open(self.sol_path, 'w') as f:
-                    for line in self.lines:
-                        f.write(line)
-                return
+                return sol
 
             for a in self.actions(pos.state):
                 state = self.trans_model(pos.state, a)
@@ -130,15 +122,7 @@ class Maze:
                     sol.append(node.state)
                     node = node.parent
 
-                for p in sol:
-                    i, j = p
-                    if (i, j) != self.start and (i, j) != self.end:
-                        self.lines[i] = self.lines[i][:j] + "o" + self.lines[i][j+1:]
-                
-                with open(self.sol_path, 'w') as f:
-                    for line in self.lines:
-                        f.write(line)
-                return
+                return sol
 
             for a in self.actions(pos.state):
                 state = self.trans_model(pos.state, a)
