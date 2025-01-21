@@ -30,5 +30,3 @@ class NeuralHTTP(BaseHTTPRequestHandler):
 
         date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
         self.wfile.write(bytes('{"time": "' + date + '"}', "utf-8"))
-
-run_http()

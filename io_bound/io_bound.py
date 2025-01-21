@@ -1,9 +1,13 @@
+import sys
+import os
 import threading
-from cpu_bound.thread_algos import *
-from io_bound.dbms import *
-from cpu_bound.cpu_yob_tasks import io_yob
-from io_bound.ftp import run_ftp
+from dbms import *
+from io_yob_tasks import io_yob
+from ftp import run_ftp
 from _http import run_http
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, parent_dir)
+from thread_algos import *
 
 
 db = DBMS("runner.json")
@@ -68,8 +72,8 @@ http_thread = threading.Thread(target=run_http)
 yob_threads_io = []
 
 for i in range(1880, 2024, 20):
-    yob_threads_io.append(threading.Thread(target=io_yob, args=(f"yobs/yob{i}.txt")))
-yob_threads_io.append(threading.Thread(target=io_yob, args=(f"yobs/yob2023.txt")))
+    yob_threads_io.append(threading.Thread(target=io_yob, args=(f"yobs/yob{i}.txt", f"yob_outputs/wyob{i}.txt")))
+yob_threads_io.append(threading.Thread(target=io_yob, args=(f"yobs/yob2023.txt", "yob_outputs/wyob2023.txt")))
 
 
 threads_io = []

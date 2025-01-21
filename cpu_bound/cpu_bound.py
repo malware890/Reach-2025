@@ -1,8 +1,12 @@
+import sys
+import os
 import threading
-from thread_algos import *
 from cpu_yob_tasks import *
 from cpu_math import *
 from fashionmnist import *
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, parent_dir)
+from thread_algos import *
 
 
 maze = Maze("mazes/maze.txt")

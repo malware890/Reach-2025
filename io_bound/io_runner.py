@@ -1,5 +1,5 @@
 from sys import argv
-import io_bound.io_bound
+from io_bound import get_io
 
 if __name__ == "__main__":
-    io_bound.io_bound.get_io(argv[1])
+    get_io(argv[1])
