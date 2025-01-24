@@ -1,10 +1,10 @@
 import sys
 import os
 import threading
-from dbms import *
-from io_yob_tasks import io_yob
-from ftp import run_ftp
-from _http import run_http
+from io_bound.dbms import *
+from io_bound.io_yob_tasks import io_yob
+from io_bound.ftp import run_ftp
+from io_bound._http import run_http
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, parent_dir)
 from thread_algos import *

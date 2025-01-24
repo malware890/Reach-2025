@@ -1,9 +1,9 @@
 import sys
 import os
 import threading
-from cpu_yob_tasks import *
-from cpu_math import *
-from fashionmnist import *
+from cpu_bound.cpu_yob_tasks import *
+from cpu_bound.cpu_math import *
+from cpu_bound.fashionmnist import *
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, parent_dir)
 from thread_algos import *
